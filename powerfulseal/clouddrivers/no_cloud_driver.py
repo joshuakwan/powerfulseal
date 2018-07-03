@@ -40,12 +40,14 @@ class NoCloudDriver(AbstractDriver):
             MESSAGE_IM_NO_CLOUD_DRIVER, "sync"
         )
 
-    def get_by_ip(self, ip):
+    def get_by_ip(self, ip, sshuser, sshpass):
         """ Creates a Node instance for given IP.
         """
         return Node(
             id="fake-{ip}".format(ip=ip),
             ip=ip,
+            sshuser=sshuser,
+            sshpass=sshpass,
             az="nope",
             name="local-{ip}".format(ip=ip),
             state=NodeState.UNKNOWN

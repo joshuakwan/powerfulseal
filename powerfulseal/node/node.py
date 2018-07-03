@@ -1,4 +1,3 @@
-
 # Copyright 2017 Bloomberg Finance L.P.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,12 +30,13 @@ class Node(object):
         Basic class representing a machine in the cluster
     """
 
-
-    def __init__(self, id, name=None, ip=None, az=None,
-            groups=None, no=None, state=None):
+    def __init__(self, id, name=None, ip=None, sshuser=None, sshpass=None, az=None,
+                 groups=None, no=None, state=None):
         self.id = id
         self.name = name
         self.ip = ip
+        self.sshuser = sshuser
+        self.sshpass = sshpass
         self.az = az
         self.groups = groups or []
         self.no = no
@@ -49,13 +49,15 @@ class Node(object):
 
     def __str__(self):
         return (
-            "[node no={no} id={id} ip={ip} az={az} groups={groups} name={name} "
+            "[node no={no} id={id} ip={ip} sshuser={user} sshpass={password} az={az} groups={groups} name={name} "
             "state={state}]"
         ).format(
             no=self.no,
             id=self.id,
             name=self.name,
             ip=self.ip,
+            user=self.sshuser,
+            password=self.sshpass,
             az=self.az,
             groups=self.groups,
             state=str(self.state)

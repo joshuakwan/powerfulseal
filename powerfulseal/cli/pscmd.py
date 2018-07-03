@@ -78,7 +78,7 @@ class PSCmd(cmd.Cmd):
     """
 
     def __init__(self, inventory, driver, executor, k8s_inventory):
-        super().__init__()
+        cmd.Cmd.__init__(self)
         self.inventory = inventory
         self.driver = driver
         self.prompt = "(seal) $ "
@@ -190,7 +190,8 @@ class PSCmd(cmd.Cmd):
         deleted = 0
         cmd = Command(line)
         if cmd.get(0) is None:
-            return print("Can't delete all machines at once. It's for your own good")
+            print("Can't delete all machines at once. It's for your own good")
+            return
         for node in self.inventory.find_nodes(cmd.get(0)):
             print("About to PERMANENTLY DELETE THIS NODE: \n{node}".format(
                 node=colour_output(str(node))
@@ -383,7 +384,8 @@ class PSCmd(cmd.Cmd):
         """
         pods = self.k8s_inventory.last_pods
         if not pods:
-            return print("No pods loaded. Use `pods` to load a set to choose from")
+            print("No pods loaded. Use `pods` to load a set to choose from")
+            return
         for pod in pods:
             print(colour_output(str(pod)))
 
@@ -418,12 +420,14 @@ class PSCmd(cmd.Cmd):
                 pod = p
                 break
         if pod is None:
-            return print("Pod number not found.")
+            print("Pod number not found.")
+            return
 
         # find the node
         node = self.inventory.get_node_by_ip(pod.host_ip)
         if node is None:
-            return print("Node not found")
+            print("Node not found")
+            return
 
         # execute docker of the pod on the node
         cmd_template = "sudo docker kill %s"
@@ -434,6 +438,7 @@ class PSCmd(cmd.Cmd):
                 print("Will execute '%s' on %s. Continue ? [y/n]: " % (cmd, node))
                 ans = input().lower()
             if ans != "y":
-                return print("Cancelling")
+                print("Cancelling")
+                return
             self.execute(cmd, [node])
 

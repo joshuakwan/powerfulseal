@@ -1,4 +1,3 @@
-
 # Copyright 2017 Bloomberg Finance L.P.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,23 +22,32 @@ def read_inventory_file_to_dict(inventory_filename):
         returns a dictionary, where keys correspond to lower case sections,
         and resolved first level-inclusions
     """
-    config = configparser.ConfigParser(allow_no_value=True)
+    config = configparser.ConfigParser(allow_no_value=True, delimiters=" ")
     config.read(inventory_filename)
-    # extract the IPs into lower-case groups per section
-    _groups = {
-        key.lower(): [ ip.lower().split(" ")[0] for (ip, group) in config.items(key)]
-        for key in config.sections()
-    }
-    # resolve one level groups hierarchy
-    groups = {}
-    for group, ips in _groups.items():
-        ips_set = set()
-        for ip in ips:
-            subgroup = _groups.get(ip)
-            if subgroup is not None:
-                for sub in subgroup:
-                    ips_set.add(sub)
-            else:
-                ips_set.add(ip)
-        groups[group] = list(ips_set)
-    return groups
+
+    _groups = {}
+    with open(inventory_filename) as f:
+        lines = f.readlines()
+        section_name = ""
+        for line in lines:
+            line = line.rstrip()
+            if line.startswith("[") and line.endswith("]"):
+                section_name = line.lstrip("[").rstrip("]")
+                _groups[section_name] = []
+                continue
+            if len(line) == 0:
+                continue
+            pieces = line.split(" ")
+            data = {}
+            data["addr"] = pieces[0]
+            for piece in pieces[1:]:
+                if piece == " ":
+                    continue
+                k, v = piece.split("=")
+                data[k] = v
+            _groups[section_name].append(data)
+
+    return _groups
+
+
+

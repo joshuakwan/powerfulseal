@@ -1,4 +1,3 @@
-
 # Copyright 2017 Bloomberg Finance L.P.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -38,12 +37,17 @@ class RemoteExecutor(object):
         results = dict()
         cmd_full = self.PREFIX + [cmd]
         for node in nodes:
-            shell = spur.SshShell(
-                hostname=node.ip,
-                username=self.user,
-                missing_host_key=self.missing_host_key,
-                private_key_file=self.ssh_path_to_private_key,
-            )
+            params = {
+                "hostname": node.ip,
+                "username": node.sshuser,
+                "missing_host_key": self.missing_host_key
+            }
+            if node.sshpass is None:
+                params["private_key_file"] = self.ssh_path_to_private_key
+            else:
+                params["password"] = node.sshpass
+            shell = spur.SshShell(**params)
+
             print("Executing '%s' on %s" % (cmd_full, node.name))
             try:
                 with shell:

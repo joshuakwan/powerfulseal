@@ -102,15 +102,16 @@ class NodeInventory():
         self.nodes_by_ip = {}
         self.azs = set()
 
-        for group, ips in sorted(self.local_ips.items()):
+        for group, items in sorted(self.local_ips.items()):
             self.groups[group] = []
 
             # different groups can have the same IPs,
             # so we need to match to the same nodes
-            for ip in ips:
+            for item in items:
+                ip = item.get("addr")
                 node = self.nodes_by_ip.get(ip)
                 if node is None:
-                    node = driver.get_by_ip(ip)
+                    node = driver.get_by_ip(ip, item.get("sshuser"), item.get("sshpass"))
                 if node is None: #pragma: no cover
                     # apart from IPs, we will also get hostnames here
                     # for those, debug, otherwise info
@@ -130,6 +131,10 @@ class NodeInventory():
                 # just for easier identification, give them numbers
                 node.no = counter
                 counter += 1
+
+        print self.groups
+        print self.nodes_by_id
+        print self.nodes_by_ip
 
     def get_azs(self):
         return sorted(list(self.azs))

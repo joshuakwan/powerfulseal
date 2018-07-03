@@ -14,10 +14,11 @@
 # limitations under the License.
 
 
-import abc
+import abc, six
 
 
-class AbstractDriver(metaclass=abc.ABCMeta):
+@six.add_metaclass(abc.ABCMeta)
+class AbstractDriver():
     """
         Abstract class representing a cloud driver.
         All concrete drivers should implement this.
@@ -28,7 +29,7 @@ class AbstractDriver(metaclass=abc.ABCMeta):
         pass #pragma: no cover
 
     @abc.abstractmethod
-    def get_by_ip(self, ip):
+    def get_by_ip(self, ip, sshuser, sshpass):
         pass #pragma: no cover
 
     @abc.abstractmethod
