@@ -132,10 +132,6 @@ class NodeInventory():
                 node.no = counter
                 counter += 1
 
-        print self.groups
-        print self.nodes_by_id
-        print self.nodes_by_ip
-
     def get_azs(self):
         return sorted(list(self.azs))
 

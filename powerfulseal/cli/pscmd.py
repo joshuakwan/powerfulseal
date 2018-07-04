@@ -436,7 +436,7 @@ class PSCmd(cmd.Cmd):
             ans = False
             while ans not in ("y", "n"):
                 print("Will execute '%s' on %s. Continue ? [y/n]: " % (cmd, node))
-                ans = input().lower()
+                ans = raw_input().lower()
             if ans != "y":
                 print("Cancelling")
                 return
