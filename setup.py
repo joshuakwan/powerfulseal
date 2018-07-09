@@ -35,8 +35,8 @@ setup(
 	    'Development Status :: 4 - Beta',
 	    'Intended Audience :: Developers',
 	    'Topic :: Software Development :: Test Tools',
-	    'Programming Language :: Python :: 3',
+	    'Programming Language :: Python :: 2',
     ],
-    python_requires='>=3',
+    python_requires='>=2',
     include_package_data=True,
 )
