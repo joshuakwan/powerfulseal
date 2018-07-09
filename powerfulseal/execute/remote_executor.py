@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+import datetime
 
 import spur
 
@@ -48,7 +48,7 @@ class RemoteExecutor(object):
                 params["password"] = node.sshpass
             shell = spur.SshShell(**params)
 
-            print("Executing '%s' on %s" % (cmd_full, node.name))
+            print("%s - Executing '%s' on %s" % (datetime.datetime.now(), cmd_full, node.name))
             try:
                 with shell:
                     output = shell.run(cmd_full)
